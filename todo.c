@@ -27,6 +27,11 @@ void tareaRealizada(Head * listaPendientes, Head * listaRealizadas);
 void mostrarListaTareas(Nodo * lista);
 void buscarTarea(Head * listaPendientes, Head * listaRealizadas);
 void liberarMemoria(Head *lista);
+Nodo * encontrarNodoID(Head lista, int ID);
+Nodo * encontrarNodoPalabra(Head lista, char *palabra);
+void moverTarea(Nodo * nodo, Head * listaRealizados);
+
+
 
 
 
@@ -87,7 +92,7 @@ Head crearListaVacia()
 
 int menu(){
     int opcion;
-    printf("\n###################################################\n\n");
+    printf("\n################### MENU ##########################\n\n");
     printf("1)Ingresar una nueva tarea\n");
     printf("2)Seleccionar tarea realizada\n");
     printf("3)Mostrar tareas pendientes\n");
@@ -99,6 +104,8 @@ int menu(){
     
     printf("Ingrese la opcion que desee: ");
     scanf("%d", &opcion);
+    printf("\n###################################################\n\n");
+
     return opcion;
 }
 
@@ -114,8 +121,29 @@ void nuevaTarea(Head * lista)
 
 void tareaRealizada(Head * listaPendientes, Head * listaRealizadas)
 {
-    printf("\nElija la tarea que fue realizada:\n\n");
+    int idTarea;
     mostrarListaTareas(*listaPendientes);
+    printf("\nEscriba el ID de la tarea que fue realizada: ");
+    scanf("%d", &idTarea);
+
+    Head * Aux = listaPendientes;
+    while ((*Aux)!=NULL && (*Aux)->T.TareaID != idTarea)
+    {
+        Aux = &(*Aux)->Siguiente;
+    }
+
+    if (*Aux)
+    {
+        Nodo * temp = *Aux;
+        
+
+        *Aux =(*Aux)->Siguiente;
+
+        moverTarea(temp, listaRealizadas);
+
+    }
+
+
     return;
 }
 
@@ -123,19 +151,26 @@ void mostrarListaTareas(Nodo * lista)
 {
     Nodo * Aux = lista;
     int count = 0;
-    printf("\nTareas:\n");
-    while (Aux->Siguiente)
+    printf("\n----------TAREAS----------\n");
+    while (Aux!=NULL && Aux->Siguiente)
     {
         mostrarTarea(Aux->T);
         Aux = Aux->Siguiente;
     }
-    mostrarTarea(Aux->T);
+    if (Aux)
+    {
+        mostrarTarea(Aux->T);
+    }
+    
+    printf("\n--------------------------\n\n");
+
     
     return;
 }
 
 void buscarTarea(Head * listaPendientes, Head * listaRealizadas)
 {
+    
 }
 
 
@@ -153,7 +188,7 @@ Tarea solicitarTarea()
     Tarea tareaPendiente;
     char descripcion[100];
     
-    printf("\nIngrese una nueva tarea pendiente\n");
+    printf("\n--------NUEVA TAREA PENDIENTE--------\n\n");
     printf("Ingrese la descripcion de la tarea: ");
     fflush(stdin);
     gets(descripcion);
@@ -171,9 +206,9 @@ Tarea solicitarTarea()
 }
 
 void mostrarTarea(Tarea T){
-    printf("\nTarea %d:\n", T.TareaID);
+    printf("\nTarea ID: %d\n", T.TareaID);
     printf("Descripcion: %s\n", T.Descripcion);
-    printf("Duracion %d:\n", T.Duracion);
+    printf("Duracion: %d\n", T.Duracion);
 }
 
 
@@ -191,3 +226,24 @@ void liberarMemoria(Head *lista) {
     *lista = NULL; // Asegurarse de que la lista quede vacía
     
 }
+
+
+void moverTarea(Nodo * nodo, Head * listaRealizados){
+    
+    nodo->Siguiente= *listaRealizados;
+    *listaRealizados = nodo;
+
+    return;
+}
+
+// Nodo * encontrarNodoID(Head lista, int ID){
+//     Nodo *nodoEncontrado;
+
+//     return nodoEncontrado;
+// }
+
+// Nodo * encontrarNodoPalabra(Head lista, char *palabra){
+//     Nodo *nodoEncontrado;
+
+//     return nodoEncontrado;
+// }
